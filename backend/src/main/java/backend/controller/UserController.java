@@ -175,43 +175,44 @@ public class UserController {
         }
     }
 
-    // Delete User
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(
-            @PathVariable Long id,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+   // Delete User
+@DeleteMapping("/{id}")
+public ResponseEntity<String> deleteUser(
+        @PathVariable Long id,
+        HttpServletRequest request,
+        HttpServletResponse response) {
 
-        return repository.findById(id)
-                .map(user -> {
-                    // Delete associated image
-                    if (user.getImage() != null) {
-                        File imageFile = new File(PROFILE_IMAGE_DIR + user.getImage());
-                        if (imageFile.exists()) {
-                            imageFile.delete();
-                        }
-                    }
+    User user = repository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
 
-                    // Delete user from DB
-                    repository.deleteById(id);
+    deleteUserImage(user);
+    repository.deleteById(id);
+    invalidateSessionAndClearCookie(request, response);
 
-                    // Invalidate session
-                    HttpSession session = request.getSession(false);
-                    if (session != null) {
-                        session.invalidate();
-                    }
+    return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
+}
 
-                    // Clear session cookie
-                    Cookie cookie = new Cookie("JSESSIONID", null);
-                    cookie.setPath("/");
-                    cookie.setHttpOnly(true);
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-
-                    return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
-                })
-                .orElseThrow(() -> new UserNotFoundException(id));
+private void deleteUserImage(User user) {
+    if (user.getImage() != null) {
+        File imageFile = new File(PROFILE_IMAGE_DIR + user.getImage());
+        if (imageFile.exists()) {
+            imageFile.delete();
+        }
     }
+}
+
+private void invalidateSessionAndClearCookie(HttpServletRequest request, HttpServletResponse response) {
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+        session.invalidate();
+    }
+
+    Cookie cookie = new Cookie("JSESSIONID", null);
+    cookie.setPath("/");
+    cookie.setHttpOnly(true);
+    cookie.setMaxAge(0);
+    response.addCookie(cookie);
+}
     // Follow User
 @PutMapping("/{id}/follow")
 public ResponseEntity<User> followUser(@PathVariable Long id) {
