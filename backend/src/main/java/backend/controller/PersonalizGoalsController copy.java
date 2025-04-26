@@ -54,16 +54,11 @@ public class PersonalizGoalsController {
         repository.deleteById(id);
     }
 
+    
     // Get completed goals for a user
     @GetMapping("/user/{userId}/completed")
     List<PersonalizGoalsModel> getCompletedGoals(@PathVariable String userId) {
         return repository.findByUserIdAndCompleted(userId, true);
-    }
-
-    // Get in-progress goals for a user
-    @GetMapping("/user/{userId}/in-progress")
-    List<PersonalizGoalsModel> getInProgressGoals(@PathVariable String userId) {
-        return repository.findByUserIdAndCompleted(userId, false);
     }
 
     
