@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -239,67 +238,25 @@ public ResponseEntity<User> unfollowUser(@PathVariable Long id) {
 
     // Helper method for image upload handling
     private void handleImageUpload(MultipartFile file, UserModel user) {
-    validateFileUpload(file);
-    
-    try {
-        String newFilename = generateUniqueFilename(file.getOriginalFilename());
-        deleteExistingUserImage(user);
-        storeUploadedFile(file, newFilename);
-        user.setImage(newFilename);
-    } catch (IOException e) {
-        throw new ImageUploadException("Failed to process profile image upload", e);
-    }
-}
+        try {
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
-/**
- * Validates that the uploaded file is acceptable
- */
-private void validateFileUpload(MultipartFile file) {
-    if (file == null || file.isEmpty()) {
-        throw new IllegalArgumentException("Uploaded file cannot be null or empty");
-    }
-    
-    if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
-        throw new IllegalArgumentException("Uploaded file must have a valid name");
-    }
-}
+            // Delete old profile image if exists
+            if (user.getImage() != null) {
+                File oldImage = new File(PROFILE_IMAGE_DIR + user.getImage());
+                if (oldImage.exists()) {
+                    oldImage.delete();
+                }
+            }
 
-/**
- * Generates a unique filename using timestamp and original filename
- */
-private String generateUniqueFilename(String originalFilename) {
-    return System.currentTimeMillis() + "_" + Paths.get(originalFilename).getFileName().toString();
-}
+            // Save new profile image
+            File profileDir = new File(PROFILE_IMAGE_DIR);
+            if (!profileDir.exists()) profileDir.mkdirs();
 
-/**
- * Deletes the user's existing profile image if one exists
- */
-private void deleteExistingUserImage(UserModel user) throws IOException {
-    if (user.getImage() != null && !user.getImage().isBlank()) {
-        Path imagePath = Paths.get(PROFILE_IMAGE_DIR, user.getImage());
-        Files.deleteIfExists(imagePath);
+            file.transferTo(Paths.get(PROFILE_IMAGE_DIR + fileName));
+            user.setImage(fileName);
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving uploaded profile image", e);
+        }
     }
-}
-
-/**
- * Stores the uploaded file to the profile images directory
- */
-private void storeUploadedFile(MultipartFile file, String filename) throws IOException {
-    Path uploadDir = Paths.get(PROFILE_IMAGE_DIR);
-    if (!Files.exists(uploadDir)) {
-        Files.createDirectories(uploadDir);
-    }
-    
-    Path destination = uploadDir.resolve(filename);
-    file.transferTo(destination);
-}
-
-/**
- * Custom exception for image upload failures
- */
-public static class ImageUploadException extends RuntimeException {
-    public ImageUploadException(String message, Throwable cause) {
-        super(message, cause);
-    }
-}
 }
