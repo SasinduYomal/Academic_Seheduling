@@ -160,28 +160,31 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    // Serve Uploaded Images
+    // Serve uploaded images
     @GetMapping("/uploads/{filename}")
-    public ResponseEntity<FileSystemResource> serveImage(@PathVariable String filename) {
+    public ResponseEntity<FileSystemResource> getImage(@PathVariable String filename) {
         File profileImage = new File(PROFILE_IMAGE_DIR + filename);
         File postImage = new File(POST_IMAGE_DIR + filename);
 
         if (profileImage.exists()) {
             return ResponseEntity.ok(new FileSystemResource(profileImage));
-        }
-
-        if (postImage.exists()) {
+        } else if (postImage.exists()) {
             return ResponseEntity.ok(new FileSystemResource(postImage));
+        } else {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
+
     // Delete User
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> deleteUser(
+            @PathVariable Long id,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
         return repository.findById(id)
                 .map(user -> {
-                    // Delete associated image if exists
+                    // Delete associated image
                     if (user.getImage() != null) {
                         File imageFile = new File(PROFILE_IMAGE_DIR + user.getImage());
                         if (imageFile.exists()) {
@@ -189,7 +192,7 @@ public class UserController {
                         }
                     }
 
-                    // Delete the user from the database
+                    // Delete user from DB
                     repository.deleteById(id);
 
                     // Invalidate session
@@ -198,7 +201,7 @@ public class UserController {
                         session.invalidate();
                     }
 
-                    // Clear JSESSIONID cookie
+                    // Clear session cookie
                     Cookie cookie = new Cookie("JSESSIONID", null);
                     cookie.setPath("/");
                     cookie.setHttpOnly(true);
@@ -209,7 +212,6 @@ public class UserController {
                 })
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
-
     // Follow User
     @PutMapping("/{id}/follow")
     public ResponseEntity<?> followUser(@PathVariable Long id) {
