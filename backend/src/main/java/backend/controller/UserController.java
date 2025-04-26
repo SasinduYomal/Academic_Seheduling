@@ -160,21 +160,22 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    // Serve uploaded images
+    // Serve Uploaded Images
     @GetMapping("/uploads/{filename}")
-    public ResponseEntity<FileSystemResource> getImage(@PathVariable String filename) {
+    public ResponseEntity<FileSystemResource> serveImage(@PathVariable String filename) {
         File profileImage = new File(PROFILE_IMAGE_DIR + filename);
         File postImage = new File(POST_IMAGE_DIR + filename);
 
         if (profileImage.exists()) {
             return ResponseEntity.ok(new FileSystemResource(profileImage));
-        } else if (postImage.exists()) {
-            return ResponseEntity.ok(new FileSystemResource(postImage));
-        } else {
-            return ResponseEntity.notFound().build();
         }
-    }
 
+        if (postImage.exists()) {
+            return ResponseEntity.ok(new FileSystemResource(postImage));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
     // Delete User
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
