@@ -213,30 +213,28 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
     // Follow User
-    @PutMapping("/{id}/follow")
-    public ResponseEntity<?> followUser(@PathVariable Long id) {
-        return repository.findById(id)
-                .map(user -> {
-                    user.setFollowers(user.getFollowers() + 1);
-                    repository.save(user);
-                    return ResponseEntity.ok(user);
-                })
-                .orElseThrow(() -> new UserNotFoundException(id));
-    }
+@PutMapping("/{id}/follow")
+public ResponseEntity<User> followUser(@PathVariable Long id) {
+    User user = repository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
+    
+    user.setFollowers(user.getFollowers() + 1);
+    User updatedUser = repository.save(user);
+    
+    return ResponseEntity.ok(updatedUser);
+}
 
-    // Unfollow User
-    @PutMapping("/{id}/unfollow")
-    public ResponseEntity<?> unfollowUser(@PathVariable Long id) {
-        return repository.findById(id)
-                .map(user -> {
-                    if (user.getFollowers() > 0) {
-                        user.setFollowers(user.getFollowers() - 1);
-                    }
-                    repository.save(user);
-                    return ResponseEntity.ok(user);
-                })
-                .orElseThrow(() -> new UserNotFoundException(id));
-    }
+// Unfollow User
+@PutMapping("/{id}/unfollow")
+public ResponseEntity<User> unfollowUser(@PathVariable Long id) {
+    User user = repository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
+    
+    user.setFollowers(Math.max(0, user.getFollowers() - 1));
+    User updatedUser = repository.save(user);
+    
+    return ResponseEntity.ok(updatedUser);
+}
 
     // Helper method for image upload handling
     private void handleImageUpload(MultipartFile file, UserModel user) {
