@@ -65,4 +65,13 @@ public class PersonalizGoalsController {
     List<PersonalizGoalsModel> getInProgressGoals(@PathVariable String userId) {
         return repository.findByUserIdAndCompleted(userId, false);
     }
+
+    
+    // Get in-progress goals for a user
+    @GetMapping("/user/{userId}/in-progress")
+    List<PersonalizGoalsModel> getInProgressGoals(@PathVariable String userId) {
+        return repository.findByUserIdAndCompleted(userId, false);
+    }
+
+
 }
