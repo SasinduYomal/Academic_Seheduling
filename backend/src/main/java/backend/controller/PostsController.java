@@ -170,7 +170,7 @@ public class PostsController {
                 return ResponseEntity.badRequest().body("You can upload a maximum of 3 files per post.");
             }
 
-            // Remove old files from the file system.
+            // Remove old files from the file system if any exist.
             List<String> oldFiles = post.getMediaFiles();
             if (oldFiles != null) {
                 for (String oldFileName : oldFiles) {
@@ -194,10 +194,23 @@ public class PostsController {
                     return ResponseEntity.badRequest().body("Invalid file type. Only images and videos are allowed.");
                 }
 
+                // Check for file size (optional but recommended)
+                if (file.getSize() > MAX_FILE_SIZE) { // Define MAX_FILE_SIZE constant elsewhere
+                    return ResponseEntity.badRequest().body("File size exceeds the maximum limit.");
+                }
+
                 try {
                     // Generate a unique file name and save the file.
                     String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                     String filePath = UPLOAD_DIR + fileName;
+
+                    // Ensure directory exists
+                    File directory = new File(UPLOAD_DIR);
+                    if (!directory.exists()) {
+                        directory.mkdirs(); // Create the directory if it doesn't exist
+                    }
+
+                    // Transfer file to the server
                     file.transferTo(Paths.get(filePath));
                     newSavedFileNames.add(fileName);
                 } catch (IOException e) {
@@ -211,7 +224,12 @@ public class PostsController {
         }
 
         // Save the updated post.
-        postRepository.save(post);
+        try {
+            postRepository.save(post);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating post: " + e.getMessage());
+        }
 
         String responseMessage = "Post updated successfully.";
         responseMessage += "\nNew Description: " + (description != null ? description : post.getDescription());
