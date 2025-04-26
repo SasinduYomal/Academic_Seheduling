@@ -327,6 +327,7 @@ public class PostsController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
         Optional<Post> postOptional = postRepository.findById(postId);
+
         if (!postOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Post with ID " + postId + " not found.");
@@ -334,20 +335,29 @@ public class PostsController {
 
         Post post = postOptional.get();
 
-        // Delete associated media files from the file system
+        // Delete associated media files
         List<String> mediaFiles = post.getMediaFiles();
-        if (mediaFiles != null) {
+        if (mediaFiles != null && !mediaFiles.isEmpty()) {
             for (String fileName : mediaFiles) {
-                File file = new File(UPLOAD_DIR + fileName);
-                if (file.exists()) {
-                    file.delete();
+                try {
+                    Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName).normalize();
+                    Files.deleteIfExists(filePath);
+                } catch (IOException e) {
+                    // Log the error if necessary
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Failed to delete file: " + fileName);
                 }
             }
         }
 
-        // Delete the post from the repository
-        postRepository.delete(post);
+        try {
+            postRepository.delete(post);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete post: " + e.getMessage());
+        }
 
         return ResponseEntity.ok("Post deleted successfully.");
     }
+
 }
