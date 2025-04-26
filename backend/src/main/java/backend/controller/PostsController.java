@@ -246,54 +246,54 @@ public class PostsController {
      * @param filename The filename of the uploaded post.
      * @return The file as a resource.
      */
-    @GetMapping(value = "/uploads/{filename}")
+    @GetMapping("/uploads/{filename}")
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    public ResponseEntity<Resource> streamPostFile(@PathVariable String filename,
+    public ResponseEntity<Resource> streamPostFile(
+            @PathVariable String filename,
             @RequestHeader HttpHeaders requestHeaders) throws IOException {
 
         Path filePath = Paths.get(UPLOAD_DIR).resolve(filename).normalize();
+
         if (!Files.exists(filePath)) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
         }
 
-        // 1. Detect the real content type (falls back to octet‑stream)
-        MediaType mediaType = MediaTypeFactory.getMediaType(filename)
+        MediaType mediaType = MediaTypeFactory.getMediaType(filePath)
                 .orElse(MediaType.APPLICATION_OCTET_STREAM);
 
-        // 2. Prepare the resource
-        UrlResource video = new UrlResource(filePath.toUri());
-        long fileLength = video.contentLength();
+        UrlResource resource = new UrlResource(filePath.toUri());
+        long fileLength = resource.contentLength();
 
-        // 3. Handle Range header (if any)
-        if (!requestHeaders.getRange().isEmpty()) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(mediaType);
+        responseHeaders.add(HttpHeaders.ACCEPT_RANGES, "bytes");
+
+        // Handle Range header (for partial content requests)
+        if (requestHeaders.getRange() != null && !requestHeaders.getRange().isEmpty()) {
             HttpRange range = requestHeaders.getRange().get(0);
             long start = range.getRangeStart(fileLength);
             long end = range.getRangeEnd(fileLength);
             long rangeLength = end - start + 1;
 
-            // open the stream, advance it, then wrap it
-            InputStream input = Files.newInputStream(filePath);
-            input.skip(start);
-            InputStreamResource slice = new InputStreamResource(input);
+            InputStream inputStream = Files.newInputStream(filePath);
+            inputStream.skip(start);
+            InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(mediaType);
-            headers.setContentLength(rangeLength);
-            headers.add(HttpHeaders.ACCEPT_RANGES, "bytes");
-            headers.add(HttpHeaders.CONTENT_RANGE,
-                    String.format("bytes %d-%d/%d", start, end, fileLength));
+            responseHeaders.setContentLength(rangeLength);
+            responseHeaders.add(HttpHeaders.CONTENT_RANGE, String.format("bytes %d-%d/%d", start, end, fileLength));
 
             return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                    .headers(headers)
-                    .body(slice);
+                    .headers(responseHeaders)
+                    .body(inputStreamResource);
         }
 
-        // 4. Full‑file response (when no Range header)
+        // If no Range header, return full file
+        responseHeaders.setContentLength(fileLength);
+
         return ResponseEntity.ok()
-                .contentType(mediaType)
-                .contentLength(fileLength)
-                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
-                .body(video);
+                .headers(responseHeaders)
+                .body(resource);
     }
 
     /**
