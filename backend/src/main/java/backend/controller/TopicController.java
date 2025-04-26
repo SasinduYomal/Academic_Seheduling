@@ -4,6 +4,7 @@ import backend.model.Topic;
 import backend.service.TopicService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,9 +37,11 @@ public class TopicController {
     }
 
     @PutMapping("/{id}")
-    public Topic update(@PathVariable Long id, @Valid @RequestBody Topic topic) {
-        return service.update(id, topic);
-    }
+public ResponseEntity<Topic> updateTopic(@PathVariable Long id, @Valid @RequestBody Topic topic) {
+    Topic updatedTopic = service.update(id, topic);
+    return ResponseEntity.ok(updatedTopic);
+}
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
