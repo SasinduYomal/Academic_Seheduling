@@ -282,7 +282,7 @@ const Sidebar = ({ userId }) => {
         "& .MuiDrawer-paper": {
           width: 240,
           backgroundColor: "#0a0a0a",
-          color: "#fff",
+          color: "#ffffff",
           borderRight: "1px solid rgba(255, 255, 255, 0.1)",
           display: "flex",
           flexDirection: "column",
