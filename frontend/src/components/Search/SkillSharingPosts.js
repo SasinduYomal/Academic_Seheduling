@@ -51,15 +51,19 @@ function SkillSharingPosts() {
                 </Box>
 
                 <TextField
-                    label="Description"
-                    placeholder="Describe your skill..."
-                    fullWidth
-                    multiline
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    sx={{ mt: 2 }}
+                        label="Description"
+                        placeholder="Describe your skill..."
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        fullWidth
+                        multiline
+                        minRows={4}
+                        maxRows={10}
+                        variant="outlined"
+                        margin="normal"
+                        sx={{ mt: 2 }}
                 />
+
 
                 <Button variant="contained" type="submit" sx={{ mt: 2 }}>
                     Submit Post
