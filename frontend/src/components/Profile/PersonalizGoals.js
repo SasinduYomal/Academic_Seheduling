@@ -1053,47 +1053,48 @@ const PersonalizedLearningGoals = () => {
               Edit Learning Goal
             </DialogTitle>
             <DialogContent sx={{ pt: 3 }}>
-              <form onSubmit={handleUpdate}>
-                <TextField
-                  fullWidth
-                  label="Goal Title"
-                  name="title"
-                  value={editingGoal?.title || ""}
-                  onChange={(e) =>
-                    setEditingGoal({ ...editingGoal, title: e.target.value })
-                  }
-                  required
-                  margin="normal"
-                  variant="outlined"
-                  InputProps={{
-                    sx: {
-                      borderRadius: 2,
-                      backgroundColor: theme.palette.background.paper,
-                    },
-                  }}
-                />
-                <TextField
-                  fullWidth
-                  label="Description"
-                  name="description"
-                  value={editingGoal?.description || ""}
-                  onChange={(e) =>
-                    setEditingGoal({
-                      ...editingGoal,
-                      description: e.target.value,
-                    })
-                  }
-                  margin="normal"
-                  variant="outlined"
-                  multiline
-                  rows={3}
-                  InputProps={{
-                    sx: {
-                      borderRadius: 2,
-                      backgroundColor: theme.palette.background.paper,
-                    },
-                  }}
-                />
+  <form onSubmit={handleUpdate}>
+    <TextField
+      fullWidth
+      label="Goal Title"
+      name="title"
+      value={editingGoal?.title || ""}
+      onChange={(e) =>
+        setEditingGoal({ ...editingGoal, title: e.target.value })
+      }
+      required
+      margin="normal"
+      variant="outlined"
+      InputProps={{
+        sx: {
+          borderRadius: 2,
+          backgroundColor: theme.palette.background.paper
+        }
+      }}
+    />
+
+    <TextField
+      fullWidth
+      label="Description"
+      name="description"
+      value={editingGoal?.description || ""}
+      onChange={(e) =>
+        setEditingGoal({ ...editingGoal, description: e.target.value })
+      }
+      margin="normal"
+      variant="outlined"
+      multiline
+      rows={3}
+      InputProps={{
+        sx: {
+          borderRadius: 2,
+          backgroundColor: theme.palette.background.paper
+        }
+      }}
+    />
+  </form>
+</DialogContent>
+
                 <Box sx={{ mt: 2, mb: 2 }}>
                   <Typography gutterBottom>Progress</Typography>
                   <Slider
@@ -1194,6 +1195,19 @@ const PersonalizedLearningGoals = () => {
 
           {/*  */}
           <Dialog
+            open={openDeleteDialog}
+            onClose={() => setOpenDeleteDialog(false)}
+            TransitionComponent={Transition}
+            PaperProps={{
+              sx: {
+                borderRadius: 3,
+                backgroundColor: theme.palette.background.paper,
+                boxShadow: theme.shadows[5],
+              },
+            }}
+          >
+
+<Dialog
             open={openDeleteDialog}
             onClose={() => setOpenDeleteDialog(false)}
             TransitionComponent={Transition}
