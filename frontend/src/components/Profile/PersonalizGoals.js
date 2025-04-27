@@ -675,6 +675,257 @@ const PersonalizedLearningGoals = () => {
             </form>
           </StyledPaper>
 
+          {/* Progress Summary */}
+          <StyledPaper elevation={3}>
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{
+                mb: 2,
+                display: "flex",
+                alignItems: "center",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <ProgressIcon sx={{ color: theme.palette.primary.main, mr: 1 }} />
+              Progress Overview
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+                flexWrap: "wrap",
+                gap: 1,
+              }}
+            >
+              <Chip
+                avatar={
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.success.main,
+                      color: theme.palette.getContrastText(
+                        theme.palette.success.main
+                      ),
+                    }}
+                  >
+                    {completedGoals}
+                  </Avatar>
+                }
+                label="Completed"
+                variant="outlined"
+                sx={{
+                  borderColor: theme.palette.success.main,
+                  color: theme.palette.success.main,
+                  fontWeight: "bold",
+                }}
+              />
+              <Chip
+                avatar={
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.primary.main,
+                      color: theme.palette.getContrastText(
+                        theme.palette.primary.main
+                      ),
+                    }}
+                  >
+                    {inProgressGoals}
+                  </Avatar>
+                }
+                label="In Progress"
+                variant="outlined"
+                sx={{
+                  borderColor: theme.palette.primary.main,
+                  color: theme.palette.primary.main,
+                  fontWeight: "bold",
+                }}
+              />
+              <Chip
+                avatar={
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.secondary.main,
+                      color: theme.palette.getContrastText(
+                        theme.palette.secondary.main
+                      ),
+                    }}
+                  >
+                    {goals.length}
+                  </Avatar>
+                }
+                label="Total Goals"
+                variant="outlined"
+                sx={{
+                  borderColor: theme.palette.secondary.main,
+                  color: theme.palette.secondary.main,
+                  fontWeight: "bold",
+                }}
+              />
+            </Box>
+            <ProgressBar
+              variant="determinate"
+              value={
+                goals.length > 0 ? (completedGoals / goals.length) * 100 : 0
+              }
+            />
+          </StyledPaper>
+
+          {/* Goals List */}
+          <StyledPaper elevation={3}>
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{
+                mb: 2,
+                display: "flex",
+                alignItems: "center",
+                color: theme.palette.text.primary,
+              }}
+            >
+              <SchoolIcon sx={{ color: theme.palette.primary.main, mr: 1 }} />
+              Current Learning Goals
+            </Typography>
+            {goals.length === 0 ? (
+              <Box
+                sx={{
+                  textAlign: "center",
+                  py: 4,
+                  color: theme.palette.text.secondary,
+                }}
+              >
+                <LightbulbIcon sx={{ fontSize: 60, opacity: 0.3, mb: 2 }} />
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  No goals yet
+                </Typography>
+                <Typography variant="body1">
+                  Add your first learning goal to get started!
+                </Typography>
+              </Box>
+            ) : (
+              <List>
+                {goals.map((goal) => (
+                  <GoalCard
+                    key={goal.id}
+                    elevation={2}
+                    completed={goal.progress === 100}
+                  >
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: "bold",
+                              color: theme.palette.text.primary,
+                            }}
+                          >
+                            {goal.title}
+                            {goal.progress === 100 && (
+                              <CheckIcon
+                                sx={{
+                                  ml: 1,
+                                  verticalAlign: "middle",
+                                  color: theme.palette.success.main,
+                                }}
+                              />
+                            )}
+                          </Typography>
+                        }
+                        secondary={
+                          <>
+                            {goal.description && (
+                              <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                sx={{ mt: 1 }}
+                              >
+                                {goal.description}
+                              </Typography>
+                            )}
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                mt: 1,
+                              }}
+                            >
+                              <DateIcon
+                                sx={{
+                                  mr: 1,
+                                  fontSize: 16,
+                                  color: theme.palette.text.secondary,
+                                }}
+                              />
+                              <Typography
+                                variant="caption"
+                                color="textSecondary"
+                              >
+                                Target:{" "}
+                                {new Date(goal.targetDate).toLocaleDateString()}
+                              </Typography>
+                            </Box>
+                          </>
+                        }
+                      />
+                      <ListItemSecondaryAction>
+                        <Tooltip title="Edit Goal">
+                          <IconButton
+                            edge="end"
+                            aria-label="edit"
+                            onClick={() => handleEditClick(goal)}
+                            sx={{ color: theme.palette.primary.main }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete Goal">
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            onClick={() => handleDeleteClick(goal)}
+                            sx={{ color: theme.palette.error.main }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Divider sx={{ my: 1 }} />
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{ mr: 2 }}
+                      >
+                        Progress: {goal.progress}%
+                      </Typography>
+                      <ProgressBar
+                        variant="determinate"
+                        value={goal.progress}
+                        sx={{ flexGrow: 1 }}
+                      />
+                    </Box>
+                    {goal.progress === 100 && (
+                      <Box sx={{ mt: 1, textAlign: "center" }}>
+                        <Chip
+                          icon={<CelebrationIcon />}
+                          label="Goal Achieved!"
+                          sx={{
+                            fontWeight: "bold",
+                            background: alpha(theme.palette.success.main, 0.2),
+                            color: theme.palette.success.main,
+                          }}
+                        />
+                      </Box>
+                    )}
+                  </GoalCard>
+                ))}
+              </List>
+            )}
+          </StyledPaper>
+
           {/* Achievements Section */}
           <StyledPaper elevation={3}>
             <Typography
@@ -695,7 +946,262 @@ const PersonalizedLearningGoals = () => {
             <Grid container spacing={3}>
               {achievementsData.map((achievement) => {
                 const unlocked = completedGoals >= achievement.threshold;
-                }}>
+                return (
+                  <Grid item xs={12} sm={6} md={4} key={achievement.id}>
+                    <AchievementCard unlocked={unlocked}>
+                      {unlocked && (
+                        <AchievementBadge unlocked={unlocked}>
+                          <CheckIcon fontSize="small" />
+                        </AchievementBadge>
+                      )}
+                      <CardContent sx={{ textAlign: "center" }}>
+                        <Box sx={{ mb: 2 }}>{achievement.icon}</Box>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          sx={{
+                            fontWeight: "bold",
+                            color: unlocked
+                              ? theme.palette.text.primary
+                              : theme.palette.text.secondary,
+                          }}
+                        >
+                          {achievement.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: unlocked
+                              ? theme.palette.text.primary
+                              : theme.palette.text.secondary,
+                            mb: 2,
+                          }}
+                        >
+                          {achievement.description}
+                        </Typography>
+                        <Chip
+                          label={`${achievement.threshold}+ Goals`}
+                          variant="outlined"
+                          size="small"
+                          sx={{
+                            mt: 1,
+                            borderColor: unlocked
+                              ? theme.palette.success.main
+                              : theme.palette.divider,
+                            color: unlocked
+                              ? theme.palette.success.main
+                              : theme.palette.text.secondary,
+                          }}
+                        />
+                      </CardContent>
+                    </AchievementCard>
+                  </Grid>
+                );
+              })}
+            </Grid>
+            {completedGoals === 0 && (
+              <Box
+                sx={{
+                  textAlign: "center",
+                  py: 4,
+                  color: theme.palette.text.secondary,
+                }}
+              >
+                <AchievementsIcon sx={{ fontSize: 60, opacity: 0.3, mb: 2 }} />
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  No achievements yet
+                </Typography>
+                <Typography variant="body1">
+                  Complete your first goal to unlock achievements!
+                </Typography>
+              </Box>
+            )}
+          </StyledPaper>
+
+          {/* Floating Add Button */}
+          <FloatingAddButton
+            color="primary"
+            aria-label="add"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <AddIcon />
+          </FloatingAddButton>
+
+          {/* Edit Dialog */}
+          <Dialog
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            TransitionComponent={Transition}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+              sx: {
+                borderRadius: 3,
+                backgroundColor: theme.palette.background.paper,
+                boxShadow: theme.shadows[5],
+              },
+            }}
+          >
+            <DialogTitle
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.common.white,
+                fontWeight: "bold",
+              }}
+            >
+              <EditIcon sx={{ mr: 1, verticalAlign: "middle" }} />
+              Edit Learning Goal
+            </DialogTitle>
+            <DialogContent sx={{ pt: 3 }}>
+              <form onSubmit={handleUpdate}>
+                <TextField
+                  fullWidth
+                  label="Goal Title"
+                  name="title"
+                  value={editingGoal?.title || ""}
+                  onChange={(e) =>
+                    setEditingGoal({ ...editingGoal, title: e.target.value })
+                  }
+                  required
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                      backgroundColor: theme.palette.background.paper,
+                    },
+                  }}
+                />
+                <TextField
+                  fullWidth
+                  label="Description"
+                  name="description"
+                  value={editingGoal?.description || ""}
+                  onChange={(e) =>
+                    setEditingGoal({
+                      ...editingGoal,
+                      description: e.target.value,
+                    })
+                  }
+                  margin="normal"
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                      backgroundColor: theme.palette.background.paper,
+                    },
+                  }}
+                />
+                <Box sx={{ mt: 2, mb: 2 }}>
+                  <Typography gutterBottom>Progress</Typography>
+                  <Slider
+                    value={editingGoal?.progress || 0}
+                    onChange={handleEditProgressChange}
+                    aria-labelledby="edit-progress-slider"
+                    valueLabelDisplay="auto"
+                    step={5}
+                    sx={{
+                      color: theme.palette.primary.main,
+                      "& .MuiSlider-thumb": {
+                        boxShadow: `0 0 0 8px ${alpha(
+                          theme.palette.primary.main,
+                          0.16
+                        )}`,
+                        "&:hover, &.Mui-focusVisible": {
+                          boxShadow: `0 0 0 10px ${alpha(
+                            theme.palette.primary.main,
+                            0.25
+                          )}`,
+                        },
+                      },
+                    }}
+                    marks={[
+                      { value: 0, label: "0%" },
+                      { value: 25, label: "25%" },
+                      { value: 50, label: "50%" },
+                      { value: 75, label: "75%" },
+                      { value: 100, label: "100%" },
+                    ]}
+                  />
+                </Box>
+                <TextField
+                  fullWidth
+                  label="Target Date"
+                  name="targetDate"
+                  type="date"
+                  value={
+                    editingGoal?.targetDate
+                      ? editingGoal.targetDate.split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setEditingGoal({
+                      ...editingGoal,
+                      targetDate: e.target.value,
+                    })
+                  }
+                  margin="normal"
+                  variant="outlined"
+                  required
+                  InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                      backgroundColor: theme.palette.background.paper,
+                    },
+                  }}
+                />
+              </form>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
+              <Button
+                onClick={() => setOpenDialog(false)}
+                sx={{ color: theme.palette.text.secondary }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdate}
+                variant="contained"
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.common.white,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.dark,
+                  },
+                }}
+              >
+                Update Goal
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Delete Confirmation Dialog */}
+          <Dialog
+            open={openDeleteDialog}
+            onClose={() => setOpenDeleteDialog(false)}
+            TransitionComponent={Transition}
+            PaperProps={{
+              sx: {
+                borderRadius: 3,
+                backgroundColor: theme.palette.background.paper,
+                boxShadow: theme.shadows[5],
+              },
+            }}
+          >
+            <DialogTitle
+              sx={{
+                backgroundColor: theme.palette.error.main,
+                color: theme.palette.common.white,
+                fontWeight: "bold",
+              }}
+            >
+              Confirm Deletion
+            </DialogTitle>
+            <DialogContent>
+              <Typography sx={{ mt: 2 }}>
                 Are you sure you want to delete the goal "{goalToDelete?.title}
                 "?
               </Typography>
