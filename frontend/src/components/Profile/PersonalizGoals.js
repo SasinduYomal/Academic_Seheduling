@@ -1175,6 +1175,7 @@ const PersonalizedLearningGoals = () => {
               >
                 Update Goal
               </Button>
+
               <Button
                 onClick={handleUpdate}
                 variant="contained"
