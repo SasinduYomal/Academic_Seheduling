@@ -77,6 +77,16 @@ const lightBeam = keyframes`
       0 0 30px rgba(0, 80, 255, 0.2);
     background-position: 0% 50%;
   }
+
+  100% {
+    text-shadow: 
+      0 0 2px #fff,
+      0 0 5px rgba(100, 200, 255, 0.8),
+      0 0 10px rgba(0, 150, 255, 0.6),
+      0 0 20px rgba(0, 100, 255, 0.4),
+      0 0 30px rgba(0, 80, 255, 0.2);
+    background-position: 0% 50%;
+  }
 `;
 
 const floatAnimation = keyframes`
