@@ -426,48 +426,45 @@ function UserProfile() {
                         flexDirection="column"
                         alignItems="center"
                       >
-                       {/* Profile Picture Upload */}
-<Zoom in timeout={1200}>
-  <Box
-    sx={{
-      position: "relative",
-      mb: 2,
-      "&:hover .camera-icon": {
-        opacity: 1,
-      },
-    }}
-  >
-    <label htmlFor="profile-image-upload">
-      <input
-        id="profile-image-upload"
-        type="file"
-        accept="image/*"
-        style={{ display: "none" }}
-        onChange={handleImageUpload}
-      />
-      <IconButton
-        component="span"
-        disabled={loading}
-        className="camera-icon"
-        sx={{
-          position: "absolute",
-          bottom: 8,
-          right: 8,
-          backgroundColor: appTheme.palette.primary.main,
-          color: "white",
-          opacity: 0,
-          transition: "opacity 0.3s",
-          "&:hover": {
-            backgroundColor: appTheme.palette.primary.dark,
-          },
-        }}
-      >
-        <CameraAltIcon />
-      </IconButton>
-    </label>
-  </Box>
-</Zoom>
-
+                        {/* Profile Picture Upload */}
+                        <Zoom in={true} timeout={1200}>
+                          <Box
+                            sx={{
+                              position: "relative",
+                              mb: 2,
+                              "&:hover .camera-icon": {
+                                opacity: 1,
+                              },
+                            }}
+                          >
+                            <label htmlFor="profile-image-upload">
+                              <input
+                                id="profile-image-upload"
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handleImageUpload}
+                              />
+                              <IconButton
+                                component="span"
+                                disabled={loading}
+                                sx={{
+                                  position: "absolute",
+                                  bottom: 8,
+                                  right: 8,
+                                  backgroundColor:
+                                    appTheme.palette.primary.main,
+                                  color: "white",
+                                  opacity: 0,
+                                  transition: "opacity 0.3s",
+                                  "&:hover": {
+                                    backgroundColor:
+                                      appTheme.palette.primary.dark,
+                                  },
+                                }}
+                                className="camera-icon"
+                              >
+                                <CameraAltIcon />
                               </IconButton>
                             </label>
                             <Avatar
