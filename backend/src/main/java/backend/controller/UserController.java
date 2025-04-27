@@ -4,48 +4,34 @@ import backend.exception.UserNotFoundException;
 import backend.model.UserModel;
 import backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin("http://localhost:3000")
 public class UserController {
 
     private final UserRepository repository;
-    private final String PROFILE_IMAGE_DIR = "src/main/uploads/";
-    private final String POST_IMAGE_DIR = "src/main/uploads/posts/";
+    private final String UPLOAD_DIR = "src/main/uploads/";
 
     @Autowired
     public UserController(UserRepository repository) {
         this.repository = repository;
 
         // Ensure upload directory exists
-        File postUploadDir = new File(POST_IMAGE_DIR);
-        if (!postUploadDir.exists()) {
-            postUploadDir.mkdirs();
-        }
-
-        File profileUploadDir = new File(PROFILE_IMAGE_DIR);
-        if (!profileUploadDir.exists()) {
-            profileUploadDir.mkdirs();
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
         }
     }
 
@@ -57,35 +43,14 @@ public class UserController {
 
     // User Login
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserModel user, HttpServletRequest request) {
+    public ResponseEntity<?> loginUser(@RequestBody UserModel user) {
         Optional<UserModel> foundUser = repository.findByUsername(user.getUsername());
         if (foundUser.isPresent() && foundUser.get().getPassword().equals(user.getPassword())) {
-            // Create a session and store user information
-            HttpSession session = request.getSession(true);
-            session.setAttribute("user", foundUser.get());
             return ResponseEntity.ok(foundUser.get());
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false); // get session if exists
-        if (session != null) {
-            session.invalidate(); // destroy session
-        }
-
-        // Clear cookies if needed
-        Cookie cookie = new Cookie("JSESSIONID", null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok("Logged out successfully.");
-    }
-
 
     // Get all users
     @GetMapping
@@ -98,12 +63,6 @@ public class UserController {
     public UserModel getUser(@PathVariable Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-    }
-
-    // Get User by Username
-    @GetMapping("/user/me")
-    public Map<String, Object> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
-        return Collections.singletonMap("user", principal.getAttributes());
     }
 
     // Update User with optional image
@@ -163,100 +122,79 @@ public class UserController {
     // Serve uploaded images
     @GetMapping("/uploads/{filename}")
     public ResponseEntity<FileSystemResource> getImage(@PathVariable String filename) {
-        File profileImage = new File(PROFILE_IMAGE_DIR + filename);
-        File postImage = new File(POST_IMAGE_DIR + filename);
-
-        if (profileImage.exists()) {
-            return ResponseEntity.ok(new FileSystemResource(profileImage));
-        } else if (postImage.exists()) {
-            return ResponseEntity.ok(new FileSystemResource(postImage));
-        } else {
+        File file = new File(UPLOAD_DIR + filename);
+        if (!file.exists()) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(new FileSystemResource(file));
     }
 
     // Delete User
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(
-            @PathVariable Long id,
-            HttpServletRequest request,
-            HttpServletResponse response) {
-
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         return repository.findById(id)
                 .map(user -> {
-                    // Delete associated image
+                    // Delete associated image if exists
                     if (user.getImage() != null) {
-                        File imageFile = new File(PROFILE_IMAGE_DIR + user.getImage());
+                        File imageFile = new File(UPLOAD_DIR + user.getImage());
                         if (imageFile.exists()) {
                             imageFile.delete();
                         }
                     }
 
-                    // Delete user from DB
                     repository.deleteById(id);
-
-                    // Invalidate session
-                    HttpSession session = request.getSession(false);
-                    if (session != null) {
-                        session.invalidate();
-                    }
-
-                    // Clear session cookie
-                    Cookie cookie = new Cookie("JSESSIONID", null);
-                    cookie.setPath("/");
-                    cookie.setHttpOnly(true);
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-
                     return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
                 })
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
-    // Follow User
-@PutMapping("/{id}/follow")
-public ResponseEntity<User> followUser(@PathVariable Long id) {
-    User user = repository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
-    
-    user.setFollowers(user.getFollowers() + 1);
-    User updatedUser = repository.save(user);
-    
-    return ResponseEntity.ok(updatedUser);
-}
 
-// Unfollow User
-@PutMapping("/{id}/unfollow")
-public ResponseEntity<User> unfollowUser(@PathVariable Long id) {
-    User user = repository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
-    
-    user.setFollowers(Math.max(0, user.getFollowers() - 1));
-    User updatedUser = repository.save(user);
-    
-    return ResponseEntity.ok(updatedUser);
-}
+    // Follow User
+    @PutMapping("/{id}/follow")
+    public ResponseEntity<?> followUser(@PathVariable Long id) {
+        return repository.findById(id)
+                .map(user -> {
+                    user.setFollowers(user.getFollowers() + 1);
+                    repository.save(user);
+                    return ResponseEntity.ok(user);
+                })
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    // Unfollow User
+    @PutMapping("/{id}/unfollow")
+    public ResponseEntity<?> unfollowUser(@PathVariable Long id) {
+        return repository.findById(id)
+                .map(user -> {
+                    if (user.getFollowers() > 0) {
+                        user.setFollowers(user.getFollowers() - 1);
+                    }
+                    repository.save(user);
+                    return ResponseEntity.ok(user);
+                })
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
 
     // Helper method for image upload handling
     private void handleImageUpload(MultipartFile file, UserModel user) {
         try {
+            // Generate unique filename
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
-            // Delete old profile image if exists
+            // Delete old image if exists
             if (user.getImage() != null) {
-                File oldImage = new File(PROFILE_IMAGE_DIR + user.getImage());
+                File oldImage = new File(UPLOAD_DIR + user.getImage());
                 if (oldImage.exists()) {
                     oldImage.delete();
                 }
             }
 
-            // Save new profile image
-            File profileDir = new File(PROFILE_IMAGE_DIR);
-            if (!profileDir.exists()) profileDir.mkdirs();
+            // Save the new file
+            file.transferTo(Paths.get(UPLOAD_DIR + fileName));
 
-            file.transferTo(Paths.get(PROFILE_IMAGE_DIR + fileName));
+            // Update user with new image filename
             user.setImage(fileName);
         } catch (IOException e) {
-            throw new RuntimeException("Error saving uploaded profile image", e);
+            throw new RuntimeException("Error saving uploaded file", e);
         }
     }
 }
