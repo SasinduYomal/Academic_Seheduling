@@ -30,7 +30,54 @@ function SkillSharingPosts() {
             <Typography variant="h4" gutterBottom>
                 Share Your Skills
             </Typography>
-        </Box>
+            <form onSubmit={handleSubmit}>
+                <Button variant="outlined" component="label">
+                    Upload Photos / Videos (max 3)
+                    <input
+                        type="file"
+                        accept="image/*,video/mp4"
+                        multiple
+                        hidden
+                        onChange={handleFileChange}
+                    />
+                </Button>
+
+                <Box sx={{ mt: 2 }}>
+                    {files.map((file, index) => (
+                        <Typography key={index} variant="body2">
+                            {file.name}
+                        </Typography>
+                    ))}
+                </Box>
+
+                <TextField
+                    label="Description"
+                    placeholder="Describe your skill..."
+                    fullWidth
+                    multiline
+                    rows={4}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    sx={{ mt: 2 }}
+                />
+
+                <Button variant="contained" type="submit" sx={{ mt: 2 }}>
+                    Submit Post
+                </Button>
+            </form>
+
+
+
+
+
+
+
+
+
+
+
+
+        </Box>    
     );
 
 
