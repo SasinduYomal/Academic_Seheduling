@@ -1231,7 +1231,6 @@ const PersonalizedLearningGoals = () => {
                 }}
               >
                 Delete
-                </Button>
               </Button>
             </DialogActions>
           </Dialog>
