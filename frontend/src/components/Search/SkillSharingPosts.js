@@ -25,6 +25,14 @@ function SkillSharingPosts() {
         setDescription("");
     };
 
+    return (
+        <Box sx={{ maxWidth: 600, mx: "auto", p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+                Share Your Skills
+            </Typography>
+        </Box>
+    );
+
 
 
 
