@@ -1,7 +1,7 @@
 package backend.controller;
 
 import backend.model.Topic;
-import backend.service.TopicService;
+import backend.service.TopicService; // Ensure this import is correct and the TopicService class exists in the specified package
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
