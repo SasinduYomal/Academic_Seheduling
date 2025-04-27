@@ -1175,10 +1175,23 @@ const PersonalizedLearningGoals = () => {
               >
                 Update Goal
               </Button>
+              <Button
+                onClick={handleUpdate}
+                variant="contained"
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.common.white,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.dark,
+                  },
+                }}
+              >
+                Update Goal
+              </Button>
             </DialogActions>
           </Dialog>
 
-          {/* Delete Confirmation Dialog */}
+          {/*  */}
           <Dialog
             open={openDeleteDialog}
             onClose={() => setOpenDeleteDialog(false)}
