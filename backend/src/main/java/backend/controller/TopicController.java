@@ -1,9 +1,11 @@
 package backend.controller;
 
 import backend.model.Topic;
+
 import backend.service.TopicService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,9 +38,7 @@ public class TopicController {
     }
 
     @PutMapping("/{id}")
-    public Topic update(@PathVariable Long id, @Valid @RequestBody Topic topic) {
-        return service.update(id, topic);
-    }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
