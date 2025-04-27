@@ -208,23 +208,27 @@ const Sidebar = ({ userId }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!userId) return;
+
+    const fetchUserDataAndGoals = async () => {
       try {
-        const [userResponse, goalsResponse] = await Promise.all([
+        const [userRes, goalsRes] = await Promise.all([
           axios.get(`http://localhost:8080/api/users/${userId}`),
           axios.get(`http://localhost:8080/api/goals/user/${userId}`),
         ]);
 
-        setUserData(userResponse.data);
-        setCompletedGoalsCount(
-          goalsResponse.data.filter((goal) => goal.progress === 100).length
+        setUserData(userRes.data);
+
+        const completedGoals = goalsRes.data.filter(
+          (goal) => goal.progress === 100
         );
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setCompletedGoalsCount(completedGoals.length);
+      } catch (err) {
+        console.error("Failed to fetch user or goals:", err);
       }
     };
 
-    if (userId) fetchData();
+    fetchUserDataAndGoals();
   }, [userId]);
 
   const handleMoreClick = () => setOpenMore(!openMore);
