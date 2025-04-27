@@ -22,8 +22,8 @@ import {
   Fingerprint,
   Google,
   GitHub,
+  Twitter,
 } from "@mui/icons-material";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import { keyframes, styled } from "@mui/system";
 
 // Gradient background animation
@@ -81,19 +81,13 @@ function Login() {
     try {
       const response = await axios.post(
         "http://localhost:8080/users/login",
-        credentials,
-        { withCredentials: true }
+        credentials
       );
       localStorage.setItem("user", JSON.stringify(response.data));
       navigate("/UserProfile");
     } catch (error) {
       setError("Invalid username or password");
     }
-  };
-
-  // New helper function for OAuth login
-  const handleOAuthLogin = (provider) => {
-    window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
   };
 
   return (
@@ -144,7 +138,209 @@ function Login() {
         />
       ))}
 
-      
+      <Slide in={true} direction="up" timeout={500}>
+        <Container component="main" maxWidth="sm">
+          <Paper
+            elevation={24}
+            sx={{
+              padding: { xs: 3, md: 5 },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              borderRadius: "16px",
+              backgroundColor: "rgba(10, 25, 47, 0.85)",
+              backdropFilter: "blur(12px)",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+              position: "relative",
+              zIndex: 1,
+              color: "#ffffff",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              overflow: "hidden",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                top: "-50%",
+                left: "-50%",
+                width: "200%",
+                height: "200%",
+                background:
+                  "linear-gradient(45deg, transparent, rgba(30, 144, 255, 0.1), transparent)",
+                transform: "rotate(45deg)",
+                animation: `${gradientAnimation} 8s linear infinite`,
+                zIndex: -1,
+              },
+            }}
+          >
+            <Fade in={true} timeout={1000}>
+              <Box
+                sx={{
+                  position: "relative",
+                  mb: 3,
+                }}
+              >
+                <CameraAltOutlined
+                  sx={{
+                    fontSize: 80,
+                    color: "#1E90FF",
+                    animation: `${floatAnimation} 5s ease-in-out infinite`,
+                    filter: "drop-shadow(0 0 8px rgba(30, 144, 255, 0.7))",
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "50%",
+                    boxShadow: "0 0 20px 10px rgba(30, 144, 255, 0.4)",
+                    animation: `${pulseAnimation} 3s infinite`,
+                  }}
+                />
+              </Box>
+            </Fade>
+            <Typography
+              component="h1"
+              variant="h3"
+              sx={{
+                mb: 1,
+                fontWeight: "bold",
+                background: "linear-gradient(90deg, #1E90FF, #00BFFF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                textShadow: "0 0 10px rgba(30, 144, 255, 0.3)",
+              }}
+            >
+              Light Lens
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              sx={{ mb: 4, color: "rgba(255, 255, 255, 0.7)" }}
+            >
+              Capture your moments, share your vision
+            </Typography>
+
+            {error && (
+              <Typography
+                sx={{
+                  mb: 2,
+                  color: "#ff6b6b",
+                  bgcolor: "rgba(255, 107, 107, 0.1)",
+                  px: 2,
+                  py: 1,
+                  borderRadius: 1,
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                {error}
+              </Typography>
+            )}
+
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{ width: "100%", mt: 1 }}
+            >
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Username"
+                name="username"
+                value={credentials.username}
+                onChange={handleChange}
+                required
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Fingerprint sx={{ color: "#1E90FF" }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  mb: 3,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "rgba(30, 144, 255, 0.5)",
+                      borderRadius: "12px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#1E90FF",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1E90FF",
+                      boxShadow: "0 0 0 2px rgba(30, 144, 255, 0.2)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                    "&.Mui-focused": {
+                      color: "#1E90FF",
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "#ffffff",
+                    py: 1.5,
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={credentials.password}
+                onChange={handleChange}
+                required
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <VisibilityOff sx={{ color: "#1E90FF" }} />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  mb: 3,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "rgba(30, 144, 255, 0.5)",
+                      borderRadius: "12px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#1E90FF",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#1E90FF",
+                      boxShadow: "0 0 0 2px rgba(30, 144, 255, 0.2)",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
+                    "&.Mui-focused": {
+                      color: "#1E90FF",
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "#ffffff",
+                    py: 1.5,
+                  },
+                }}
+              />
 
               <GradientButton
                 type="submit"
@@ -203,34 +399,37 @@ function Login() {
                 }}
               >
                 <IconButton
-                  onClick={() => handleOAuthLogin("google")}
                   sx={{
                     bgcolor: "rgba(255, 255, 255, 0.1)",
-                    "&:hover": { bgcolor: "rgba(255, 255, 255, 0.2)" },
+                    "&:hover": {
+                      bgcolor: "rgba(255, 255, 255, 0.2)",
+                    },
                     transition: "all 0.3s ease",
                   }}
                 >
                   <Google sx={{ color: "#DB4437" }} />
                 </IconButton>
                 <IconButton
-                  onClick={() => handleOAuthLogin("github")}
                   sx={{
                     bgcolor: "rgba(255, 255, 255, 0.1)",
-                    "&:hover": { bgcolor: "rgba(255, 255, 255, 0.2)" },
+                    "&:hover": {
+                      bgcolor: "rgba(255, 255, 255, 0.2)",
+                    },
                     transition: "all 0.3s ease",
                   }}
                 >
                   <GitHub sx={{ color: "#ffffff" }} />
                 </IconButton>
                 <IconButton
-                  onClick={() => handleOAuthLogin("facebook")}
                   sx={{
                     bgcolor: "rgba(255, 255, 255, 0.1)",
-                    "&:hover": { bgcolor: "rgba(255, 255, 255, 0.2)" },
+                    "&:hover": {
+                      bgcolor: "rgba(255, 255, 255, 0.2)",
+                    },
                     transition: "all 0.3s ease",
                   }}
                 >
-                  <FacebookIcon sx={{ color: "#1877F2" }} />
+                  <Twitter sx={{ color: "#1DA1F2" }} />
                 </IconButton>
               </Box>
             </Box>
