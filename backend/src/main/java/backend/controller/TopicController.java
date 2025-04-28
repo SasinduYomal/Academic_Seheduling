@@ -1,18 +1,21 @@
 package backend.controller;
 
 import backend.model.Topic;
-
 import backend.service.TopicService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/topics")
-@CrossOrigin
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        allowCredentials = "true"
+)
+@PreAuthorize("isAuthenticated()")
 public class TopicController {
 
     private final TopicService service;
@@ -38,7 +41,9 @@ public class TopicController {
     }
 
     @PutMapping("/{id}")
-
+    public Topic update(@PathVariable Long id, @Valid @RequestBody Topic topic) {
+        return service.update(id, topic);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
