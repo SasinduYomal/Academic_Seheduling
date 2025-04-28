@@ -35,44 +35,19 @@ public class Topic {
     }
 
     /* ------------------------ getters & setters --------------------------- */
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getTitle() {
-        return title;
-    }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    public String getResource() {
-        return resource;
-    }
-    
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
-    
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-    
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-    
-    public Integer getProgress() {
-        return progress;
-    }
-    
-    public void setProgress(Integer progress) {
-        this.progress = progress;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getResource() { return resource; }
+    public void setResource(String resource) { this.resource = resource; }
+
+    public LocalDate getDeadline() { return deadline; }
+    public void setDeadline(LocalDate deadline) { this.deadline = deadline; }
+
+    public Integer getProgress() { return progress; }
+    public void setProgress(Integer progress) { this.progress = progress; }
     
 }
