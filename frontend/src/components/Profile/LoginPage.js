@@ -138,26 +138,6 @@ function Login() {
         />
       ))}
 
-      {Array.from({ length: 10 }).map((_, index) => (
-        <Box
-          key={index}
-          sx={{
-            position: "absolute",
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.1)",
-            animation: `${floatAnimation} ${
-              15 + Math.random() * 15
-            }s ease-in-out infinite`,
-            animationDelay: `${Math.random() * 5}s`,
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            width: `${10 + Math.random() * 30}px`,
-            height: `${10 + Math.random() * 30}px`,
-            zIndex: 0,
-          }}
-        />
-      ))}
-
       <Slide in={true} direction="up" timeout={500}>
         <Container component="main" maxWidth="sm">
           <Paper
