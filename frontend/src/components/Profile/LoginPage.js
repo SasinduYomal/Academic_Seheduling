@@ -63,6 +63,20 @@ const GradientButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const GradientButton = styled(Button)(({ theme }) => ({
+  background: "linear-gradient(45deg, #1E90FF 0%, #00BFFF 100%)",
+  color: "white",
+  fontWeight: "bold",
+  padding: "12px 24px",
+  borderRadius: "50px",
+  boxShadow: "0 4px 15px rgba(30, 144, 255, 0.4)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-2px)",
+    boxShadow: "0 6px 20px rgba(30, 144, 255, 0.6)",
+    background: "linear-gradient(45deg, #1E90FF 30%, #00BFFF 90%)",
+  },
+}));
 function Login() {
   const [credentials, setCredentials] = useState({
     username: "",
