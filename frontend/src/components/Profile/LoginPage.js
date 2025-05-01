@@ -63,20 +63,6 @@ const GradientButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const GradientButton = styled(Button)(({ theme }) => ({
-  background: "linear-gradient(45deg, #1E90FF 0%, #00BFFF 100%)",
-  color: "white",
-  fontWeight: "bold",
-  padding: "12px 24px",
-  borderRadius: "50px",
-  boxShadow: "0 4px 15px rgba(30, 144, 255, 0.4)",
-  transition: "all 0.3s ease",
-  "&:hover": {
-    transform: "translateY(-2px)",
-    boxShadow: "0 6px 20px rgba(30, 144, 255, 0.6)",
-    background: "linear-gradient(45deg, #1E90FF 30%, #00BFFF 90%)",
-  },
-}));
 function Login() {
   const [credentials, setCredentials] = useState({
     username: "",
@@ -132,6 +118,26 @@ function Login() {
       }}
     >
       {/* Animated floating bubbles */}
+      {Array.from({ length: 10 }).map((_, index) => (
+        <Box
+          key={index}
+          sx={{
+            position: "absolute",
+            borderRadius: "50%",
+            background: "rgba(255, 255, 255, 0.1)",
+            animation: `${floatAnimation} ${
+              15 + Math.random() * 15
+            }s ease-in-out infinite`,
+            animationDelay: `${Math.random() * 5}s`,
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${10 + Math.random() * 30}px`,
+            height: `${10 + Math.random() * 30}px`,
+            zIndex: 0,
+          }}
+        />
+      ))}
+
       {Array.from({ length: 10 }).map((_, index) => (
         <Box
           key={index}
