@@ -926,6 +926,14 @@ function UserProfile() {
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           TransitionComponent={Slide}
         >
+          {/* Snackbar for notifications */}
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            TransitionComponent={Slide}
+          ></Snackbar>
           <Alert
             onClose={handleCloseSnackbar}
             severity={snackbar.severity}
