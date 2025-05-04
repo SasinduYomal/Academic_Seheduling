@@ -35,6 +35,9 @@ public class SecurityConfig {
                         .requestMatchers("/", "/LoginPage", "/oauth2/**").permitAll()
                         .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
                         .anyRequest().authenticated()
+                        .requestMatchers("/", "/LoginPage", "/oauth2/**").permitAll()
+                        .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(sessionAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception ->
