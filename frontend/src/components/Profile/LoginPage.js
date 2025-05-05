@@ -431,7 +431,20 @@ function Login() {
                 >
                   <Google sx={{ color: "#DB4437" }} />
                 </IconButton>
+
                 <IconButton
+                 <IconButton
+                 sx={{
+                   bgcolor: "rgba(255, 255, 255, 0.1)",
+                   "&:hover": {
+                     bgcolor: "rgba(255, 255, 255, 0.2)",
+                   },
+                   transition: "all 0.3s ease",
+                 }}
+               >
+                 <Google sx={{ color: "#DB4437" }} />
+               </IconButton>
+               <IconButton
                   sx={{
                     bgcolor: "rgba(255, 255, 255, 0.1)",
                     "&:hover": {
