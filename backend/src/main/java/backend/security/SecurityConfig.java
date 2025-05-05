@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler((request, response, authentication) -> {
                             // Directly redirect to the frontend's UserProfile route.
+                            
                             response.sendRedirect("http://localhost:3000/UserProfile");
                         })
                 )
