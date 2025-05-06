@@ -376,6 +376,18 @@ function Login() {
               >
                 Login
               </GradientButton>
+              <GradientButton
+                type="submit"
+                fullWidth
+                sx={{
+                  mt: 2,
+                  mb: 3,
+                  fontSize: "1.1rem",
+                  animation: `${pulseAnimation} 3s infinite`,
+                }}
+              >
+                Login
+              </GradientButton>
 
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Link
@@ -431,20 +443,7 @@ function Login() {
                 >
                   <Google sx={{ color: "#DB4437" }} />
                 </IconButton>
-
                 <IconButton
-                 <IconButton
-                 sx={{
-                   bgcolor: "rgba(255, 255, 255, 0.1)",
-                   "&:hover": {
-                     bgcolor: "rgba(255, 255, 255, 0.2)",
-                   },
-                   transition: "all 0.3s ease",
-                 }}
-               >
-                 <Google sx={{ color: "#DB4437" }} />
-               </IconButton>
-               <IconButton
                   sx={{
                     bgcolor: "rgba(255, 255, 255, 0.1)",
                     "&:hover": {
