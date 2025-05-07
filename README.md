@@ -1,22 +1,26 @@
-# ITPM Project
+# PAF Project
 
-Academic Scheduler System Introduction
+Introduction
 
-The Academic Scheduler is a comprehensive system designed to streamline and automate the complex process of creating academic timetables in educational institutions. By integrating data from three key management modules—Faculty, Subject and Course, and Classroom and Resource—the system generates optimized schedules that balance various constraints and requirements.
-
-Modern educational institutions face significant challenges in creating efficient timetables that satisfy multiple stakeholders while maximizing resource utilization. Manual scheduling is time-consuming, error-prone, and often leads to suboptimal results. The Academic Scheduler addresses these issues through a systematic, integrated approach.
-
-The system consists of four interconnected modules:
-
-1. Faculty Management Module: Handles faculty information, including availability, specializations, teaching preferences, and workload allocation.
-
-2. Subject and Course Management Module: Manages all academic offerings, including course structures, subject details (names and codes), credit requirements, and prerequisite relationships.
-
-3. Classroom and Resource Management Module: Tracks physical resources including classrooms, lecture halls, seminar rooms, and computer labs, along with their capacities, equipment (projectors, smart boards), and availability.
-
-4. Automated Timetable Generation: The core module that integrates data from all other modules to produce conflict-free, optimized academic schedules based on defined constraints and preferences.
-
-The timetable generation process works by collecting faculty availability from the Faculty Management module, course and subject information from the Subject and Course Management module, and resource availability from the Classroom and Resource Management module. These inputs are then processed through advanced algorithms to create schedules that minimize conflicts and optimize resource allocation.
-
-This integrated approach ensures that all stakeholders' needs are addressed while maintaining academic quality and operational efficiency.
-
+In today's digital era, photography has become more accessible than ever, with enthusiasts and professionals constantly looking for ways to improve their skills. Our Skill-Sharing & Learning Platform for Photography aims to create an interactive space where users can share their photography knowledge, learn from others, and track their learning progress. The platform will allow users to post and share their photos, videos, and learning experiences while engaging with the community through likes, comments, and follows.
+The system is built using:
+          •	Backend: Java (Spring Boot) REST API
+          •	Frontend: React-based web application
+          •	Authentication: OAuth 2.0
+          •	Version Control: Git & GitHub Workflow
+Functional Requirements
+User Management
+          •	User registration and login using OAuth 2.0.
+          •	User profiles with bio, profile picture, and skills.
+          •	Follow/unfollow other users.
+Skill-Sharing Features
+          •	Users can create and share photography posts with images/videos and descriptions.
+          •	Commenting and liking functionality for posts.
+          •	Tagging system for different photography categories (portrait, landscape, wildlife, etc.).
+Learning Progress & Planning
+          •	Users can track their learning progress with customizable templates.
+          •	Ability to create and share learning plans (topics, resources, timelines).
+          •	Progress updates and achievement badges for motivation.
+Notifications & Interaction
+          •	Real-time notifications for likes, comments, and follows.
+          •	Personalized recommendations based on user interests.
