@@ -39,12 +39,7 @@ const Comment = ({ text, onDelete, onEdit }) => {
                         Edit
                     </button>
                 )}
-                <button
-                    onClick={onDelete}
-                    className="text-red-500 hover:underline text-sm"
-                >
-                    Delete
-                </button>
+                
             </div>
         </div>
     );
