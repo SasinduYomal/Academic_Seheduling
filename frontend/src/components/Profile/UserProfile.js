@@ -456,6 +456,17 @@ function UserProfile() {
                               },
                             }}
                           >
+                          {/* Profile Picture Upload */}
+                        <Zoom in={true} timeout={1200}>
+                          <Box
+                            sx={{
+                              position: "relative",
+                              mb: 2,
+                              "&:hover .camera-icon": {
+                                opacity: 1,
+                              },
+                            }}
+                          >
                             <label htmlFor="profile-image-upload">
                               <input
                                 id="profile-image-upload"
