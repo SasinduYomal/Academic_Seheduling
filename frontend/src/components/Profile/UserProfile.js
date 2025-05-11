@@ -276,6 +276,25 @@ function UserProfile() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!user?.id) return;
+
+    if (!window.confirm("Are you sure you want to delete your profile?"))
+      return;
+
+    try {
+      setLoading(true);
+      await axios.delete(`http://localhost:8080/users/${user.id}`);
+      localStorage.removeItem("user");
+      showSnackbar("Profile deleted successfully", "success");
+      navigate("/");
+    } catch (error) {
+      showSnackbar("Error deleting profile", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file || !user?.id) return;
