@@ -328,37 +328,6 @@ const PersonalizedLearningGoals = () => {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     },
   });
-  // Create theme based on dark mode state
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? "dark" : "light",
-      primary: {
-        main: darkMode ? darkColors.primary : lightColors.primary,
-      },
-      secondary: {
-        main: darkMode ? darkColors.secondary : lightColors.secondary,
-      },
-      success: {
-        main: darkMode ? darkColors.success : lightColors.success,
-      },
-      warning: {
-        main: darkMode ? darkColors.warning : lightColors.warning,
-      },
-      error: {
-        main: darkMode ? darkColors.error : lightColors.error,
-      },
-      info: {
-        main: darkMode ? darkColors.info : lightColors.info,
-      },
-      background: {
-        default: darkMode ? darkColors.light : lightColors.light,
-        paper: darkMode ? "#1e1e1e" : "#ffffff",
-      },
-    },
-    typography: {
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    },
-  });
 
   // Get current user on component mount
   useEffect(() => {
@@ -376,6 +345,23 @@ const PersonalizedLearningGoals = () => {
       fetchGoals();
     }
   }, [currentUser]);
+
+  // Check for newly completed goals
+  useEffect(() => {
+    const newlyCompleted = goals.filter(
+      (goal) => goal.progress === 100 && !goal.completed
+    );
+    if (newlyCompleted.length > 0) {
+      setGoals((prevGoals) =>
+        prevGoals.map((goal) =>
+          goal.progress === 100 ? { ...goal, completed: true } : goal
+        )
+      );
+      setShowCelebration(true);
+      const timer = setTimeout(() => setShowCelebration(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [goals]);
 
   // Check for newly completed goals
   useEffect(() => {
