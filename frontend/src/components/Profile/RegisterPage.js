@@ -52,6 +52,12 @@ const pulseAnimation = keyframes`
   100% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0); }
 `;
 
+const pulseAnimation = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(30, 144, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0); }
+`;
+
 // Custom styled button with gradient
 const GradientButton = styled(Button)(({ theme }) => ({
   background: "linear-gradient(45deg, #1E90FF 0%, #00BFFF 100%)",
