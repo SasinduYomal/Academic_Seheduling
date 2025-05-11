@@ -571,6 +571,19 @@ function Register() {
                         textDecoration: "underline",
                       },
                     }}
+
+                    Already have an account?{" "}
+                      <Link
+                        href="/LoginPage"
+                        sx={{
+                          color: "#1E90FF",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                          "&:hover": {
+                            textDecoration: "underline",
+                          },
+                        }}
+                      >
                   >
                     Sign In
                   </Link>
