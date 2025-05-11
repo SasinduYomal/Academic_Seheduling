@@ -971,6 +971,13 @@ function UserProfile() {
             elevation={6}
             variant="filled"
           >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              elevation={6}
+              variant="filled"
+            ></Alert>
             {snackbar.message}
           </Alert>
         </Snackbar>
