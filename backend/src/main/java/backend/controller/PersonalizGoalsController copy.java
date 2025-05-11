@@ -49,6 +49,20 @@ public class PersonalizGoalsController {
                 .orElseThrow(() -> new PersonalizGoalsNotFoundException(id));
     }
 
+    // Update goal
+    @PutMapping("/{id}")
+    PersonalizGoalsModel updateGoal(@RequestBody PersonalizGoalsModel updatedGoal, @PathVariable Long id) {
+        return repository.findById(id)
+                .map(goal -> {
+                    goal.setTitle(updatedGoal.getTitle());
+                    goal.setDescription(updatedGoal.getDescription());
+                    goal.setProgress(updatedGoal.getProgress());
+                    goal.setTargetDate(updatedGoal.getTargetDate());
+                    return repository.save(goal);
+                })
+                .orElseThrow(() -> new PersonalizGoalsNotFoundException(id));
+    }
+
     // Delete goal
     @DeleteMapping("/{id}")
     void deleteGoal(@PathVariable Long id) {
