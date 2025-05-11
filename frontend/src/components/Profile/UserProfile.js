@@ -202,31 +202,6 @@ function UserProfile() {
         }
       }
     };
-    // Load user data and preferences
-  useEffect(() => {
-    const loadUserData = async () => {
-      const loggedUser = JSON.parse(localStorage.getItem("user"));
-      if (!loggedUser) {
-        navigate("/login");
-      } else {
-        try {
-          setLoading(true);
-          const response = await axios.get(
-            `http://localhost:8080/users/${loggedUser.id}`
-          );
-          setUser(response.data);
-          setUpdatedUser(response.data);
-          setIsFollowing(response.data.isFollowing || false);
-          setFollowersCount(response.data.followers || 0);
-          setFollowingCount(response.data.following || 0);
-        } catch (error) {
-          showSnackbar("Error loading user data", "error");
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
 
     const savedDarkMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedDarkMode);
