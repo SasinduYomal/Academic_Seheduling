@@ -363,6 +363,23 @@ const PersonalizedLearningGoals = () => {
     }
   }, [goals]);
 
+  // Check for newly completed goals
+  useEffect(() => {
+    const newlyCompleted = goals.filter(
+      (goal) => goal.progress === 100 && !goal.completed
+    );
+    if (newlyCompleted.length > 0) {
+      setGoals((prevGoals) =>
+        prevGoals.map((goal) =>
+          goal.progress === 100 ? { ...goal, completed: true } : goal
+        )
+      );
+      setShowCelebration(true);
+      const timer = setTimeout(() => setShowCelebration(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [goals]);
+
   const fetchGoals = async () => {
     try {
       const response = await axios.get(

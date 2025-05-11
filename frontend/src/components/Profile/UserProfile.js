@@ -208,11 +208,6 @@ function UserProfile() {
     loadUserData();
   }, [navigate]);
 
-  const savedDarkMode = localStorage.getItem("darkMode") === "true";
-  setDarkMode(savedDarkMode);
-  loadUserData();
-}, [navigate]);
-
   const showSnackbar = (message, severity) => {
     setSnackbar({ open: true, message, severity });
   };
