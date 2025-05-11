@@ -197,4 +197,28 @@ public class UserController {
             throw new RuntimeException("Error saving uploaded file", e);
         }
     }
+
+    // Helper method for image upload handling
+    private void handleImageUpload(MultipartFile file, UserModel user) {
+        try {
+            // Generate unique filename
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+            // Delete old image if exists
+            if (user.getImage() != null) {
+                File oldImage = new File(UPLOAD_DIR + user.getImage());
+                if (oldImage.exists()) {
+                    oldImage.delete();
+                }
+            }
+
+            // Save the new file
+            file.transferTo(Paths.get(UPLOAD_DIR + fileName));
+
+            // Update user with new image filename
+            user.setImage(fileName);
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving uploaded file", e);
+        }
+    }
 }
