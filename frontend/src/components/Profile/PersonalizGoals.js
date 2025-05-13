@@ -1207,20 +1207,6 @@ const PersonalizedLearningGoals = () => {
                 boxShadow: theme.shadows[5],
               },
             }}
-
-
-            {/* Delete Confirmation Dialog */}
-          <Dialog
-            open={openDeleteDialog}
-            onClose={() => setOpenDeleteDialog(false)}
-            TransitionComponent={Transition}
-            PaperProps={{
-              sx: {
-                borderRadius: 3,
-                backgroundColor: theme.palette.background.paper,
-                boxShadow: theme.shadows[5],
-              },
-            }}
           >
             <DialogTitle
               sx={{
