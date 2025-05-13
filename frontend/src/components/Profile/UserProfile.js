@@ -831,6 +831,22 @@ function UserProfile() {
               color: "white",
             }}
           >
+
+            {/* Edit Profile Dialog */}
+        <Dialog
+          open={openEditDialog}
+          onClose={() => setOpenEditDialog(false)}
+          maxWidth="sm"
+          fullWidth
+          TransitionComponent={Slide}
+          transitionDuration={500}
+        >
+          <DialogTitle
+            sx={{
+              backgroundColor: appTheme.palette.primary.main,
+              color: "white",
+            }}
+          >
             Edit Profile
           </DialogTitle>
           <DialogContent sx={{ pt: 3 }}>
