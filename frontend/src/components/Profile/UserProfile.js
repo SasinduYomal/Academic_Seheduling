@@ -631,6 +631,35 @@ function UserProfile() {
                     </Paper>
                   </Grid>
 
+
+                   {/* Post Upload */}
+                        <Slide direction="up" in={true} timeout={1500}>
+                          <Box width="100%">
+                            <label htmlFor="post-upload">
+                              <input
+                                id="post-upload"
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handlePostUpload}
+                              />
+                              <Button
+                                component="span"
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                startIcon={<AddIcon />}
+                                disabled={loading}
+                              >
+                                Upload Post
+                              </Button>
+                            </label>
+                          </Box>
+                        </Slide>
+                      </Box>
+                    </Paper>
+                  </Grid>
+
                   <Grid item xs={12} md={7} lg={6}>
                     <Paper
                       elevation={4}
@@ -788,6 +817,22 @@ function UserProfile() {
         </Box>
 
         {/* Edit Profile Dialog */}
+        <Dialog
+          open={openEditDialog}
+          onClose={() => setOpenEditDialog(false)}
+          maxWidth="sm"
+          fullWidth
+          TransitionComponent={Slide}
+          transitionDuration={500}
+        >
+          <DialogTitle
+            sx={{
+              backgroundColor: appTheme.palette.primary.main,
+              color: "white",
+            }}
+          >
+
+            {/* Edit Profile Dialog */}
         <Dialog
           open={openEditDialog}
           onClose={() => setOpenEditDialog(false)}
