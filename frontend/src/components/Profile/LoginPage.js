@@ -63,6 +63,28 @@ const GradientButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// Import styled and Button components
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+
+// Custom Gradient Button with Enhanced Styling
+const GradientButton = styled(Button)(({ theme }) => ({
+  background: "linear-gradient(45deg, #1E90FF 0%, #00BFFF 100%)",
+  color: "#ffffff",
+  fontWeight: 600,
+  padding: "12px 24px",
+  borderRadius: "50px",
+  boxShadow: "0 4px 15px rgba(30, 144, 255, 0.4)",
+  textTransform: "none",
+  transition: "all 0.3s ease-in-out",
+
+  "&:hover": {
+    transform: "translateY(-2px)",
+    boxShadow: "0 6px 20px rgba(30, 144, 255, 0.6)",
+    background: "linear-gradient(45deg, #1E90FF 30%, #00BFFF 90%)",
+  },
+}));
+
 function Login() {
   const [credentials, setCredentials] = useState({
     username: "",
@@ -342,6 +364,18 @@ function Login() {
                 }}
               />
 
+              <GradientButton
+                type="submit"
+                fullWidth
+                sx={{
+                  mt: 2,
+                  mb: 3,
+                  fontSize: "1.1rem",
+                  animation: `${pulseAnimation} 3s infinite`,
+                }}
+              >
+                Login
+              </GradientButton>
               <GradientButton
                 type="submit"
                 fullWidth

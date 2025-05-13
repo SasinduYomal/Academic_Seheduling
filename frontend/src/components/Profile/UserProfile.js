@@ -257,7 +257,104 @@ function UserProfile() {
     }
   };
 
-  c
+  const handleDelete = async () => {
+    if (!user?.id) return;
+
+    if (!window.confirm("Are you sure you want to delete your profile?"))
+      return;
+
+    try {
+      setLoading(true);
+      await axios.delete(`http://localhost:8080/users/${user.id}`);
+      localStorage.removeItem("user");
+      showSnackbar("Profile deleted successfully", "success");
+      navigate("/");
+    } catch (error) {
+      showSnackbar("Error deleting profile", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!user?.id) return;
+
+    if (!window.confirm("Are you sure you want to delete your profile?"))
+      return;
+
+    try {
+      setLoading(true);
+      await axios.delete(`http://localhost:8080/users/${user.id}`);
+      localStorage.removeItem("user");
+      showSnackbar("Profile deleted successfully", "success");
+      navigate("/");
+    } catch (error) {
+      showSnackbar("Error deleting profile", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !user?.id) return;
+
+    if (!file.type.match("image.*")) {
+      showSnackbar("Please select an image file", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showSnackbar("Image size should be less than 5MB", "error");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(
+        `http://localhost:8080/users/${user.id}/upload`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      setUser(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data));
+      showSnackbar("Profile picture updated successfully", "success");
+    } catch (error) {
+      showSnackbar("Error uploading image", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFollowToggle = async () => {
+    if (!user?.id) return;
+
+    try {
+      setLoading(true);
+      const endpoint = isFollowing ? "unfollow" : "follow";
+      const response = await axios.put(
+        `http://localhost:8080/users/${user.id}/${endpoint}`
+      );
+
+      const newFollowersCount = isFollowing
+        ? followersCount - 1
+        : followersCount + 1;
+      const updatedUserData = { ...user, followers: newFollowersCount };
+
+      setUser(updatedUserData);
+      setUpdatedUser(updatedUserData);
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+      setIsFollowing(!isFollowing);
+      setFollowersCount(newFollowersCount);
+
+      showSnackbar(
+        isFollowing ? "Unfollowed successfully" : "Followed successfully",
+        "success"
+      );
     } catch (error) {
       showSnackbar("Error updating follow status", "error");
     } finally {
@@ -325,7 +422,122 @@ function UserProfile() {
               </Box>
             </Fade>
 
-          
+            {loading && (
+              <Box display="flex" justifyContent="center" my={4}>
+                <CircularProgress color="secondary" />
+              </Box>
+            )}
+
+            {user && !loading && (
+              <Grow in={true} timeout={1000}>
+                <Grid container spacing={4} justifyContent="center">
+                  <Grid item xs={12} md={5} lg={4}>
+                    <Paper
+                      elevation={4}
+                      sx={{
+                        p: 3,
+                        borderRadius: 4,
+                        background: appTheme.palette.background.paper,
+                      }}
+                    >
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                      >
+                        {/* Profile Picture Upload */}
+                        <Zoom in={true} timeout={1200}>
+                          <Box
+                            sx={{
+                              position: "relative",
+                              mb: 2,
+                              "&:hover .camera-icon": {
+                                opacity: 1,
+                              },
+                            }}
+                          >
+                          {/* Profile Picture Upload */}
+                        <Zoom in={true} timeout={1200}>
+                          <Box
+                            sx={{
+                              position: "relative",
+                              mb: 2,
+                              "&:hover .camera-icon": {
+                                opacity: 1,
+                              },
+                            }}
+                          >
+                            <label htmlFor="profile-image-upload">
+                              <input
+                                id="profile-image-upload"
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handleImageUpload}
+                              />
+                              <IconButton
+                                component="span"
+                                disabled={loading}
+                                sx={{
+                                  position: "absolute",
+                                  bottom: 8,
+                                  right: 8,
+                                  backgroundColor:
+                                    appTheme.palette.primary.main,
+                                  color: "white",
+                                  opacity: 0,
+                                  transition: "opacity 0.3s",
+                                  "&:hover": {
+                                    backgroundColor:
+                                      appTheme.palette.primary.dark,
+                                  },
+                                }}
+                                className="camera-icon"
+                              >
+                                <CameraAltIcon />
+                              </IconButton>
+                            </label>
+                            <Avatar
+                              alt="Profile"
+                              src={
+                                user.image
+                                  ? `http://localhost:8080/users/uploads/${user.image}`
+                                  : "/default-avatar.jpg"
+                              }
+                            />
+                          </Box>
+                        </Zoom>
+
+                        <Typography variant="h5" gutterBottom>
+                          {user.username}
+                        </Typography>
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          color="text.secondary"
+                          mb={2}
+                        >
+                          <EmailIcon fontSize="small" sx={{ mr: 1 }} />
+                          <Typography variant="subtitle1">
+                            {user.email}
+                          </Typography>
+                        </Box>
+
+                        {/* Followers/Following */}
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          width="100%"
+                          gap={2}
+                          mb={3}
+                        >
+                          <Card
+                            sx={{
+                              flex: 1,
+                              textAlign: "center",
+                              backgroundColor:
+                                appTheme.palette.background.default,
+                            }}
                           >
                             <CardContent>
                               <Typography
@@ -392,6 +604,35 @@ function UserProfile() {
                         </Box>
 
                         {/* Post Upload */}
+                        <Slide direction="up" in={true} timeout={1500}>
+                          <Box width="100%">
+                            <label htmlFor="post-upload">
+                              <input
+                                id="post-upload"
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={handlePostUpload}
+                              />
+                              <Button
+                                component="span"
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                startIcon={<AddIcon />}
+                                disabled={loading}
+                              >
+                                Upload Post
+                              </Button>
+                            </label>
+                          </Box>
+                        </Slide>
+                      </Box>
+                    </Paper>
+                  </Grid>
+
+
+                   {/* Post Upload */}
                         <Slide direction="up" in={true} timeout={1500}>
                           <Box width="100%">
                             <label htmlFor="post-upload">
@@ -710,7 +951,32 @@ function UserProfile() {
               </Box>
             </Box>
           </DialogContent>
-         
+          <DialogActions sx={{ p: 2 }}>
+            <Button
+              onClick={() => setOpenEditDialog(false)}
+              disabled={loading}
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdate}
+              variant="contained"
+              color="primary"
+              disabled={loading}
+              endIcon={
+                loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  <CheckIcon />
+                )
+              }
+            >
+              Save Changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         {/* Snackbar for notifications */}
         <Snackbar
           open={snackbar.open}
@@ -719,6 +985,14 @@ function UserProfile() {
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           TransitionComponent={Slide}
         >
+          {/* Snackbar for notifications */}
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            TransitionComponent={Slide}
+          ></Snackbar>
           <Alert
             onClose={handleCloseSnackbar}
             severity={snackbar.severity}
@@ -726,6 +1000,13 @@ function UserProfile() {
             elevation={6}
             variant="filled"
           >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity={snackbar.severity}
+              sx={{ width: "100%" }}
+              elevation={6}
+              variant="filled"
+            ></Alert>
             {snackbar.message}
           </Alert>
         </Snackbar>

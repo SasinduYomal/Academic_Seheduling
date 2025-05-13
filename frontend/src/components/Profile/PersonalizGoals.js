@@ -363,6 +363,23 @@ const PersonalizedLearningGoals = () => {
     }
   }, [goals]);
 
+  // Check for newly completed goals
+  useEffect(() => {
+    const newlyCompleted = goals.filter(
+      (goal) => goal.progress === 100 && !goal.completed
+    );
+    if (newlyCompleted.length > 0) {
+      setGoals((prevGoals) =>
+        prevGoals.map((goal) =>
+          goal.progress === 100 ? { ...goal, completed: true } : goal
+        )
+      );
+      setShowCelebration(true);
+      const timer = setTimeout(() => setShowCelebration(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [goals]);
+
   const fetchGoals = async () => {
     try {
       const response = await axios.get(
@@ -1175,23 +1192,10 @@ const PersonalizedLearningGoals = () => {
               >
                 Update Goal
               </Button>
-              <Button
-                onClick={handleUpdate}
-                variant="contained"
-                sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.common.white,
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
-                  },
-                }}
-              >
-                Update Goal
-              </Button>
             </DialogActions>
           </Dialog>
 
-          {/*  */}
+          {/* Delete Confirmation Dialog */}
           <Dialog
             open={openDeleteDialog}
             onClose={() => setOpenDeleteDialog(false)}

@@ -1,18 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    Box,
-    Typography,
-    Container,
-    Button,
-    Grid,
-    IconButton,
-    Divider,
-    Card,
-    CardContent,
-    Avatar,
-    Chip,
-    TextField, Menu, MenuItem,
+  Box,
+  Typography,
+  Container,
+  Button,
+  Grid,
+  IconButton,
+  Divider,
+  Card,
+  CardContent,
+  Avatar,
+  Chip,
+  TextField,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { keyframes } from "@emotion/react";
@@ -81,6 +83,14 @@ const AnimatedLogo = ({ size = "medium" }) => {
     large: { icon: 48, text: "h4" },
   };
 
+  const AnimatedLogo = ({ size = "medium" }) => {
+  const sizes = {
+    small: { icon: 24, text: "h6" },
+    medium: { icon: 32, text: "h5" },
+    large: { icon: 48, text: "h4" },
+  };
+
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       {/* Animated Camera Icon */}
@@ -141,209 +151,229 @@ const AnimatedLogo = ({ size = "medium" }) => {
 };
 
 function Home() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const user = localStorage.getItem("user");
-        if (user) {
-            navigate("/UserProfile");
-        }
-    }, [navigate]);
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      navigate("/UserProfile");
+    }
+  }, [navigate]);
 
-    // Sample data
-    const trendingPhotographers = [
-        {
-            id: 1,
-            name: "Alex Morgan",
-            avatar: "A",
-            specialty: "Portrait",
-            followers: "12.4k",
-        },
-        {
-            id: 2,
-            name: "Jamie Chen",
-            avatar: "J",
-            specialty: "Landscape",
-            followers: "8.7k",
-        },
-        {
-            id: 3,
-            name: "Sam Wilson",
-            avatar: "S",
-            specialty: "Street",
-            followers: "15.2k",
-        },
-    ];
+  // Sample data
+  const trendingPhotographers = [
+    {
+      id: 1,
+      name: "Alex Morgan",
+      avatar: "A",
+      specialty: "Portrait",
+      followers: "12.4k",
+    },
+    {
+      id: 2,
+      name: "Jamie Chen",
+      avatar: "J",
+      specialty: "Landscape",
+      followers: "8.7k",
+    },
+    {
+      id: 3,
+      name: "Sam Wilson",
+      avatar: "S",
+      specialty: "Street",
+      followers: "15.2k",
+    },
+  ];
 
-    const trendingPhotos = [
-        { id: 1, title: "Golden Hour", likes: 1243, comments: 87 },
-        { id: 2, title: "Urban Jungle", likes: 892, comments: 45 },
-        { id: 3, title: "Mountain Peak", likes: 1567, comments: 112 },
-    ];
+  const trendingPhotos = [
+    { id: 1, title: "Golden Hour", likes: 1243, comments: 87 },
+    { id: 2, title: "Urban Jungle", likes: 892, comments: 45 },
+    { id: 3, title: "Mountain Peak", likes: 1567, comments: 112 },
+  ];
 
-    const [user, setUser] = useState(null);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
+  const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
-    // On component mount, check localStorage first before fetching from the backend.
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        } else {
-            fetch("http://localhost:8080/users/user/me", {
-                credentials: "include", // Important for cookies/session
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.user) {
-                        setUser(data.user);
-                        // Save user data in localStorage for persistent login
-                        localStorage.setItem("user", JSON.stringify(data.user));
-                    }
-                })
-                .catch((err) => {
-                    console.error("Error fetching user data:", err);
-                });
-        }
-    }, []);
-
-    const handleAvatarClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    // Logout function: clear frontend states and storage, then redirect.
-    const handleLogout = () => {
-        fetch("http://localhost:8080/users/logout", {
-            method: "POST",
-            credentials: "include",
+  // On component mount, check localStorage first before fetching from the backend.
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      fetch("http://localhost:8080/users/user/me", {
+        credentials: "include", // Important for cookies/session
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            setUser(data.user);
+            // Save user data in localStorage for persistent login
+            localStorage.setItem("user", JSON.stringify(data.user));
+          }
         })
-            .then((response) => {
-                if (response.ok) {
-                    localStorage.removeItem("user");
-                    setUser(null);
-                    navigate("/LoginPage");
-                } else {
-                    console.error("Logout failed:", response.status);
-                }
-            })
-            .catch((err) => {
-                console.error("Logout error:", err);
-            });
-    };
+        .catch((err) => {
+          console.error("Error fetching user data:", err);
+        });
+    }
+  }, []);
 
-    return (
-        <Box
-            sx={{
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                background: "linear-gradient(-45deg, #0f0c29, #302b63, #24243e)",
-                backgroundSize: "400% 400%",
-                animation: `${gradientAnimation} 15s ease infinite`,
-                overflow: "hidden",
-                position: "relative",
-            }}
-        >
-            {/* Header/Navbar */}
-            <Box
-                sx={{
-                    width: "100%",
-                    py: 2,
-                    px: { xs: 2, md: 6 },
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    backgroundColor: "rgba(15, 12, 41, 0.8)",
-                    backdropFilter: "blur(10px)",
-                    zIndex: 10,
-                    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-                }}
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Logout function: clear frontend states and storage, then redirect.
+  const handleLogout = () => {
+    fetch("http://localhost:8080/users/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((response) => {
+        if (response.ok) {
+          localStorage.removeItem("user");
+          setUser(null);
+          navigate("/LoginPage");
+        } else {
+          console.error("Logout failed:", response.status);
+        }
+      })
+      .catch((err) => {
+        console.error("Logout error:", err);
+      });
+  };
+
+  // Logout function: clear frontend states and storage, then redirect.
+  const handleLogout = () => {
+    fetch("http://localhost:8080/users/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((response) => {
+        if (response.ok) {
+          localStorage.removeItem("user");
+          setUser(null);
+          navigate("/LoginPage");
+        } else {
+          console.error("Logout failed:", response.status);
+        }
+      })
+      .catch((err) => {
+        console.error("Logout error:", err);
+      });
+  };
+
+  return (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: "linear-gradient(-45deg, #0f0c29, #302b63, #24243e)",
+        backgroundSize: "400% 400%",
+        animation: `${gradientAnimation} 15s ease infinite`,
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      {/* Header/Navbar */}
+      <Box
+        sx={{
+          width: "100%",
+          py: 2,
+          px: { xs: 2, md: 6 },
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "rgba(15, 12, 41, 0.8)",
+          backdropFilter: "blur(10px)",
+          zIndex: 10,
+          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <AnimatedLogo size="medium" />
+        </motion.div>
+
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button
+              startIcon={<Explore />}
+              sx={{
+                color: "rgba(255, 255, 255, 0.8)",
+                "&:hover": { color: "#2196f3" },
+              }}
             >
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <AnimatedLogo size="medium" />
-                </motion.div>
+              Explore
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button
+              startIcon={<Collections />}
+              sx={{
+                color: "rgba(255, 255, 255, 0.8)",
+                "&:hover": { color: "#2196f3" },
+              }}
+            >
+              Collections
+            </Button>
+          </motion.div>
+        </Box>
 
-                <Box sx={{ display: "flex", gap: 1 }}>
-                    <motion.div whileHover={{ scale: 1.05 }}>
-                        <Button
-                            startIcon={<Explore />}
-                            sx={{
-                                color: "rgba(255, 255, 255, 0.8)",
-                                "&:hover": { color: "#2196f3" },
-                            }}
-                        >
-                            Explore
-                        </Button>
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }}>
-                        <Button
-                            startIcon={<Collections />}
-                            sx={{
-                                color: "rgba(255, 255, 255, 0.8)",
-                                "&:hover": { color: "#2196f3" },
-                            }}
-                        >
-                            Collections
-                        </Button>
-                    </motion.div>
-                </Box>
-
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <IconButton sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
-                        <Notifications />
-                    </IconButton>
-                    {user ? (
-                        <div>
-                            <motion.div whileHover={{ scale: 1.05 }}>
-                                <Avatar
-                                    alt={user.name}
-                                    src={user.picture}
-                                    sx={{ width: 40, height: 40, cursor: "pointer" }}
-                                    onClick={handleAvatarClick}
-                                />
-                            </motion.div>
-                            {/* Dropdown menu for logout */}
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleMenuClose}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "right",
-                                }}
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                            >
-                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                            </Menu>
-                        </div>
-                    ) : (
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button
-                                variant="contained"
-                                startIcon={<LoginIcon />}
-                                sx={{
-                                    backgroundColor: "#2196f3",
-                                    "&:hover": { backgroundColor: "#1976d2" },
-                                    borderRadius: "12px",
-                                    textTransform: "none",
-                                    fontWeight: "bold",
-                                }}
-                                onClick={() => navigate("/LoginPage")}
-                            >
-                                Sign In
-                            </Button>
-                        </motion.div>
-                    )}
-                </Box>
-            </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+            <Notifications />
+          </IconButton>
+          {user ? (
+            <div>
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Avatar
+                  alt={user.name}
+                  src={user.picture}
+                  sx={{ width: 40, height: 40, cursor: "pointer" }}
+                  onClick={handleAvatarClick}
+                />
+              </motion.div>
+              {/* Dropdown menu for logout */}
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
+          ) : (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="contained"
+                startIcon={<LoginIcon />}
+                sx={{
+                  backgroundColor: "#2196f3",
+                  "&:hover": { backgroundColor: "#1976d2" },
+                  borderRadius: "12px",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                }}
+                onClick={() => navigate("/LoginPage")}
+              >
+                Sign In
+              </Button>
+            </motion.div>
+          )}
+        </Box>
+      </Box>
 
       {/* Main Content */}
       <Container

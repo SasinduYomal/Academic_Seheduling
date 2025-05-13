@@ -35,6 +35,9 @@ public class SecurityConfig {
                         .requestMatchers("/", "/LoginPage", "/oauth2/**").permitAll()
                         .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
                         .anyRequest().authenticated()
+                        .requestMatchers("/", "/LoginPage", "/oauth2/**").permitAll()
+                        .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(sessionAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception ->
@@ -45,6 +48,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler((request, response, authentication) -> {
                             // Directly redirect to the frontend's UserProfile route.
+                            
                             response.sendRedirect("http://localhost:3000/UserProfile");
                         })
                 )

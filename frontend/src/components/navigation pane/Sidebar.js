@@ -77,6 +77,16 @@ const lightBeam = keyframes`
       0 0 30px rgba(0, 80, 255, 0.2);
     background-position: 0% 50%;
   }
+
+  100% {
+    text-shadow: 
+      0 0 2px #fff,
+      0 0 5px rgba(100, 200, 255, 0.8),
+      0 0 10px rgba(0, 150, 255, 0.6),
+      0 0 20px rgba(0, 100, 255, 0.4),
+      0 0 30px rgba(0, 80, 255, 0.2);
+    background-position: 0% 50%;
+  }
 `;
 
 const floatAnimation = keyframes`
@@ -198,23 +208,27 @@ const Sidebar = ({ userId }) => {
   const location = useLocation();
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!userId) return;
+
+    const fetchUserDataAndGoals = async () => {
       try {
-        const [userResponse, goalsResponse] = await Promise.all([
+        const [userRes, goalsRes] = await Promise.all([
           axios.get(`http://localhost:8080/api/users/${userId}`),
           axios.get(`http://localhost:8080/api/goals/user/${userId}`),
         ]);
 
-        setUserData(userResponse.data);
-        setCompletedGoalsCount(
-          goalsResponse.data.filter((goal) => goal.progress === 100).length
+        setUserData(userRes.data);
+
+        const completedGoals = goalsRes.data.filter(
+          (goal) => goal.progress === 100
         );
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setCompletedGoalsCount(completedGoals.length);
+      } catch (err) {
+        console.error("Failed to fetch user or goals:", err);
       }
     };
 
-    if (userId) fetchData();
+    fetchUserDataAndGoals();
   }, [userId]);
 
   const handleMoreClick = () => setOpenMore(!openMore);
@@ -268,7 +282,7 @@ const Sidebar = ({ userId }) => {
         "& .MuiDrawer-paper": {
           width: 240,
           backgroundColor: "#0a0a0a",
-          color: "#fff",
+          color: "#ffffff",
           borderRight: "1px solid rgba(255, 255, 255, 0.1)",
           display: "flex",
           flexDirection: "column",
@@ -364,6 +378,21 @@ const Sidebar = ({ userId }) => {
             />
           </AnimatedListItem>
         </Tooltip>
+
+        {/* More Options */}
+        <AnimatedListItem
+          onClick={handleMoreClick}
+          sx={{
+            "& .MuiListItemIcon-root": {
+              color: openMore ? "#00d2ff" : "inherit",
+            },
+          }}
+        >
+          <ListItemIcon>
+            <MoreHoriz />
+          </ListItemIcon>
+          <ListItemText primary="More" />
+        </AnimatedListItem>
 
         {/* More Options */}
         <AnimatedListItem
