@@ -394,6 +394,21 @@ const Sidebar = ({ userId }) => {
           <ListItemText primary="More" />
         </AnimatedListItem>
 
+        {/* More Options */}
+        <AnimatedListItem
+          onClick={handleMoreClick}
+          sx={{
+            "& .MuiListItemIcon-root": {
+              color: openMore ? "#00d2ff" : "inherit",
+            },
+          }}
+        >
+          <ListItemIcon>
+            <MoreHoriz />
+          </ListItemIcon>
+          <ListItemText primary="More" />
+        </AnimatedListItem>
+
         <Collapse
           in={openMore}
           timeout="auto"
