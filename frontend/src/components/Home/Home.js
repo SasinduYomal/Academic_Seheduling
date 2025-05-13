@@ -81,6 +81,14 @@ const AnimatedLogo = ({ size = "medium" }) => {
     large: { icon: 48, text: "h4" },
   };
 
+  const AnimatedLogo = ({ size = "medium" }) => {
+  const sizes = {
+    small: { icon: 24, text: "h6" },
+    medium: { icon: 32, text: "h5" },
+    large: { icon: 48, text: "h4" },
+  };
+
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       {/* Animated Camera Icon */}
