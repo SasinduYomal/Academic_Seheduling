@@ -126,6 +126,23 @@ const BrandContainer = styled(Box)({
   },
 });
 
+// Styled Components
+const BrandContainer = styled(Box)({
+  position: "relative",
+  padding: "16px",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "1px",
+    background:
+      "linear-gradient(90deg, transparent, rgba(0, 180, 255, 0.5), transparent)",
+    animation: `${fadeIn} 1s ease-out`,
+  },
+});
+
 const AnimatedBrand = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   fontSize: "1.8rem",
