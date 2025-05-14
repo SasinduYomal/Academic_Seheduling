@@ -572,6 +572,8 @@ function Register() {
                       },
                     }}
 
+                    
+                    
                     Already have an account?{" "}
                       <Link
                         href="/LoginPage"
