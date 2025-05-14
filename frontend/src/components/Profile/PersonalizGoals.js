@@ -1263,6 +1263,20 @@ const PersonalizedLearningGoals = () => {
               >
                 Delete
               </Button>
+
+              <Button
+                onClick={handleDeleteConfirm}
+                variant="contained"
+                sx={{
+                  backgroundColor: theme.palette.error.main,
+                  color: theme.palette.common.white,
+                  "&:hover": {
+                    backgroundColor: theme.palette.error.dark,
+                  },
+                }}
+              >
+                Delete
+              </Button>
             </DialogActions>
           </Dialog>
         </Container>
