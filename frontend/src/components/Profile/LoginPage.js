@@ -376,6 +376,19 @@ function Login() {
               >
                 Login
               </GradientButton>
+
+              <GradientButton
+                type="submit"
+                fullWidth
+                sx={{
+                  mt: 2,
+                  mb: 3,
+                  fontSize: "1.1rem",
+                  animation: `${pulseAnimation} 3s infinite`,
+                }}
+              >
+                Login
+              </GradientButton>
               <GradientButton
                 type="submit"
                 fullWidth
