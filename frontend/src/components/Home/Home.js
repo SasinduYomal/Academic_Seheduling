@@ -620,6 +620,34 @@ function Home() {
                     overflow: "hidden",
                   }}
                 >
+
+                  <motion.div
+                animate={{
+                  y: [0, 15, 0],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+                style={{
+                  position: "absolute",
+                  bottom: -30,
+                  left: { xs: -20, md: 50 },
+                  zIndex: -1,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: "12px",
+                    backgroundColor: "#4caf50",
+                    transform: "rotate(-10deg)",
+                    overflow: "hidden",
+                  }}
+                >
                   <Box
                     component="img"
                     src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
