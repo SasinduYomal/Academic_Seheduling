@@ -5,9 +5,7 @@ const Comment = ({ text, onDelete, onEdit }) => {
     const [editedText, setEditedText] = useState(text);
 
     const handleSave = () => {
-        if (editedText.trim() !== "") {
-            onEdit(editedText.trim());
-            setIsEditing(false);
+        ;
         }
     };
 
