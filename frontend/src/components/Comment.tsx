@@ -22,8 +22,7 @@ const Comment = ({ text, onDelete, onEdit }) => {
                 />
             ) : (
                 <p className="flex-1 text-sm break-words">{text}</p>
-            )}
-            <div className="flex gap-2 justify-end w-full">
+            )}>
                 {isEditing ? (
                     <button
                         onClick={handleSave}
