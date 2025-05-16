@@ -12,7 +12,8 @@ const Comment = ({ text, onDelete, onEdit }) => {
     };
 
     return (
-        <div (
+        <div className="bg-gray-100 p-3 rounded-lg shadow-sm flex flex-col items-start justify-between gap-1">
+            {isEditing ? (
                 <input
                     type="text"
                     className="flex-1 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
