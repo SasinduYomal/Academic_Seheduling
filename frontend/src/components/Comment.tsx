@@ -27,8 +27,7 @@ const Comment = ({ text, onDelete, onEdit }) => {
                 {isEditing ? (
                     <button
                         onClick={handleSave}
-                        className="text-green-500 hover:underline text-sm"
-                    >
+                        className="
                         Save
                     </button>
                 ) : (
