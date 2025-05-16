@@ -2,8 +2,7 @@ import {useState} from "react";
 
 const Comment = ({ text, onDelete, onEdit }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedText, setEditedText] = useState(text);
-
+    
     const handleSave = () => {
         if (editedText.trim() !== "") {
             onEdit(editedText.trim());
