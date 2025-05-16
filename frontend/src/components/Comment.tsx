@@ -34,7 +34,7 @@ const Comment = ({ text, onDelete, onEdit }) => {
                 ) : (
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="text-blue-500 hover:underline text-sm"
+                        className="
                     >
                         Edit
                     </button>
